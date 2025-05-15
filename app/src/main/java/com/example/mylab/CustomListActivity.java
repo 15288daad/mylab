@@ -33,10 +33,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CustomListActivity extends AppCompatActivity  implements AdapterView.OnItemClickListener{
+public class CustomListActivity extends AppCompatActivity  implements AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener{
     private static final String TAG="CustomListActivity";
     private ListView mylist;
     private  Handler handler;
+    private  View progressBar;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,16 +71,21 @@ public class CustomListActivity extends AppCompatActivity  implements AdapterVie
                     ArrayList<HashMap<String,String>> list2 = (ArrayList<HashMap<String,String>>)msg.obj;
                     MyAdapter adapter2 = new MyAdapter(CustomListActivity.this,R.layout.list_item,list2);
                     mylist.setAdapter(adapter2);
+                    //隐藏进度条
+                    progressBar.setVisibility(View.GONE);
 
                 }
                 super.handleMessage(msg);
             }
         };
 
-        MyAdapter myAdapter = new MyAdapter(this,R.layout.list_item,listItems);
+        //MyAdapter myAdapter = new MyAdapter(this,R.layout.list_item,listItems);
+        progressBar = findViewById(R.id.progressBar);
         mylist = findViewById(R.id.mylist2);
-        mylist.setAdapter(myAdapter);
+        //mylist.setAdapter(myAdapter);
         mylist.setOnItemClickListener(this);
+        mylist.setOnItemLongClickListener(this);
+
         //启动线程
 //        new Thread(()->{
 //            Document doc = null;
@@ -114,11 +120,12 @@ public class CustomListActivity extends AppCompatActivity  implements AdapterVie
 //                Log.i(TAG,"onCreate:handler.sendMessage(msg)");
 //
 //        }).start();
+
         new Thread(()->{
             Document doc = null;
             ArrayList<HashMap<String,String>> retlist = new ArrayList<HashMap<String,String>>();
-
             try {
+                Thread.sleep(1000);
                 doc = Jsoup.connect("https://www.huilvbiao.com/bank/spdb").get();
 
                 Log.i(TAG,"run:title ="+doc.title());
@@ -143,7 +150,7 @@ public class CustomListActivity extends AppCompatActivity  implements AdapterVie
                     map.put("ItemDetail",str2);
                     retlist.add(map);
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
             Message msg = handler.obtainMessage(3,retlist);
@@ -162,11 +169,17 @@ public class CustomListActivity extends AppCompatActivity  implements AdapterVie
         String detailStr = map.get("ItemDetail");
         Log.i(TAG, "onItemClick: titleStr=" + titleStr);
         Log.i(TAG, "onItemClick: detailStr=" + detailStr);
-        //打开新的窗口
 
-        Intent intent = new Intent(this, DetailRateShow.class);
-        intent.putExtra("Nation", titleStr);
-        intent.putExtra("Rate", detailStr);
-        startActivity(intent);
+
+//        //打开新的窗口
+//        Intent intent = new Intent(this, DetailRateShow.class);
+//        intent.putExtra("Nation", titleStr);
+//        intent.putExtra("Rate", detailStr);
+//        startActivity(intent);
+    }
+
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        Log.i(TAG,"onItemLongClick");
+        return true;
     }
 }
