@@ -25,7 +25,7 @@ public class SettingActivity extends AppCompatActivity implements Runnable{
         Log.i(TAG, "onCreate: dollar=" + dollar);
         Log.i(TAG, "onCreate: euro=" + euro);
         Log.i(TAG, "onCreate: won=" + won);}
-
+//
     public void save(View btn) {
         String dollarStr = inpDollar.getText().toString();
         String euroStr = inpEuro.getText().toString();
