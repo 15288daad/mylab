@@ -75,8 +75,8 @@ public class Scoring extends AppCompatActivity {
     }
     protected void onSaveInstanceState(@NonNull Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putInt("key1",currentScoreTeamA);
-        outState.putInt("key1",currentScoreTeamB);
+        outState.putInt("key11",currentScoreTeamA);
+        outState.putInt("key11",currentScoreTeamB);
     }
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState){
         super.onRestoreInstanceState(savedInstanceState);
